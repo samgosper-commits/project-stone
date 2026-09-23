@@ -1,75 +1,62 @@
-[gd_scene load_steps=11 format=3]
-
+[gd_scene load_steps=13 format=3]
 [ext_resource path="res://scripts/shared_arena_camera.gd" type="Script" id="1"]
 [ext_resource path="res://scripts/player_spawner.gd" type="Script" id="2"]
 [ext_resource path="res://characters/prototype_player.tscn" type="PackedScene" id="3"]
-
+[ext_resource path="res://scripts/stage_phase_controller.gd" type="Script" id="4"]
 [sub_resource type="BoxMesh" id="CarMesh"]
-size = Vector3(8, 0.5, 10)
-
+size = Vector3(8,0.5,10)
 [sub_resource type="BoxShape3D" id="CarShape"]
-size = Vector3(8, 0.5, 10)
-
+size = Vector3(8,0.5,10)
 [sub_resource type="StandardMaterial3D" id="CargoMat"]
-albedo_color = Color(0.55, 0.22, 0.12, 1)
-
+albedo_color=Color(0.55,0.22,0.12,1)
 [sub_resource type="StandardMaterial3D" id="PassengerMat"]
-albedo_color = Color(0.12, 0.30, 0.55, 1)
-
+albedo_color=Color(0.12,0.30,0.55,1)
 [sub_resource type="StandardMaterial3D" id="EngineMat"]
-albedo_color = Color(0.18, 0.18, 0.20, 1)
-
+albedo_color=Color(0.18,0.18,0.20,1)
 [sub_resource type="BoxMesh" id="ConnectorMesh"]
-size = Vector3(3, 0.35, 2)
-
+size=Vector3(3,0.35,2)
 [sub_resource type="BoxShape3D" id="ConnectorShape"]
-size = Vector3(3, 0.35, 2)
-
+size=Vector3(3,0.35,2)
 [node name="RunawayTrain" type="Node3D"]
-
+[node name="StagePhaseController" type="Node" parent="."]
+script=ExtResource("4")
 [node name="Cargo" type="StaticBody3D" parent="."]
-position = Vector3(0, 0, 11)
+position=Vector3(0,0,11)
 [node name="Mesh" type="MeshInstance3D" parent="Cargo"]
-mesh = SubResource("CarMesh")
-material_override = SubResource("CargoMat")
+mesh=SubResource("CarMesh")
+material_override=SubResource("CargoMat")
 [node name="Collision" type="CollisionShape3D" parent="Cargo"]
-shape = SubResource("CarShape")
-
+shape=SubResource("CarShape")
 [node name="Passenger" type="StaticBody3D" parent="."]
 [node name="Mesh" type="MeshInstance3D" parent="Passenger"]
-mesh = SubResource("CarMesh")
-material_override = SubResource("PassengerMat")
+mesh=SubResource("CarMesh")
+material_override=SubResource("PassengerMat")
 [node name="Collision" type="CollisionShape3D" parent="Passenger"]
-shape = SubResource("CarShape")
-
+shape=SubResource("CarShape")
 [node name="Engine" type="StaticBody3D" parent="."]
-position = Vector3(0, 0, -11)
+position=Vector3(0,0,-11)
 [node name="Mesh" type="MeshInstance3D" parent="Engine"]
-mesh = SubResource("CarMesh")
-material_override = SubResource("EngineMat")
+mesh=SubResource("CarMesh")
+material_override=SubResource("EngineMat")
 [node name="Collision" type="CollisionShape3D" parent="Engine"]
-shape = SubResource("CarShape")
-
+shape=SubResource("CarShape")
 [node name="RearConnector" type="StaticBody3D" parent="."]
-position = Vector3(0, 0, 5.5)
+position=Vector3(0,0,5.5)
 [node name="Mesh" type="MeshInstance3D" parent="RearConnector"]
-mesh = SubResource("ConnectorMesh")
+mesh=SubResource("ConnectorMesh")
 [node name="Collision" type="CollisionShape3D" parent="RearConnector"]
-shape = SubResource("ConnectorShape")
-
+shape=SubResource("ConnectorShape")
 [node name="FrontConnector" type="StaticBody3D" parent="."]
-position = Vector3(0, 0, -5.5)
+position=Vector3(0,0,-5.5)
 [node name="Mesh" type="MeshInstance3D" parent="FrontConnector"]
-mesh = SubResource("ConnectorMesh")
+mesh=SubResource("ConnectorMesh")
 [node name="Collision" type="CollisionShape3D" parent="FrontConnector"]
-shape = SubResource("ConnectorShape")
-
+shape=SubResource("ConnectorShape")
 [node name="PlayerSpawner" type="Node3D" parent="."]
-position = Vector3(0, 0.75, 0)
-script = ExtResource("2")
-player_scene = ExtResource("3")
-local_player_count = 4
-
+position=Vector3(0,0.75,0)
+script=ExtResource("2")
+player_scene=ExtResource("3")
+local_player_count=4
 [node name="SharedArenaCamera" type="Camera3D" parent="."]
-position = Vector3(0, 16, 18)
-script = ExtResource("1")
+position=Vector3(0,16,18)
+script=ExtResource("1")
