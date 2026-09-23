@@ -11,8 +11,6 @@ jobs:
       image: barichello/godot-ci:4.4
     steps:
       - uses: actions/checkout@v4
-      - name: Install export templates
-        run: mkdir -p ~/.local/share/godot/export_templates/4.4.stable && cp -r /root/.local/share/godot/export_templates/4.4.stable/* ~/.local/share/godot/export_templates/4.4.stable/ || true
       - name: Import
         run: godot --headless --path game --editor --quit
       - name: Build Windows alpha
