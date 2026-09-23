@@ -23,3 +23,5 @@ textures/default_filters/use_nearest_mipmap_filter=false
 ; trigger_android_alpha_workflow=2
 
 ; apk_build_trigger=1
+
+; validate_android_apk=1
