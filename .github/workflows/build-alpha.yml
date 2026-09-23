@@ -15,6 +15,21 @@ jobs:
         run: |
           mkdir -p /github/home/.local/share/godot/export_templates/4.4.stable
           cp -r /root/.local/share/godot/export_templates/4.4.stable/* /github/home/.local/share/godot/export_templates/4.4.stable/
+      - name: Configure Android toolchain
+        run: |
+          mkdir -p /github/home/.config/godot
+          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore /github/home/debug.keystore -storepass android -dname "CN=Android Debug,O=Project Stone,C=AU" -validity 10000
+          godot --headless --editor --path game --quit --editor-settings /github/home/.config/godot/editor_settings-4.tres || true
+          cat > /github/home/.config/godot/editor_settings-4.tres <<'EOF'
+          [gd_resource format=3]
+
+          [resource]
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/android_sdk_path = "/opt/android-sdk"
+          export/android/debug_keystore = "/github/home/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          EOF
       - name: Import and validate
         run: godot --headless --path game --editor --quit
       - name: Build Windows alpha
