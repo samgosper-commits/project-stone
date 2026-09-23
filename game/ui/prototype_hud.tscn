@@ -1,11 +1,23 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 [ext_resource path="res://scripts/hud.gd" type="Script" id="1"]
+[ext_resource path="res://scripts/touch_controls.gd" type="Script" id="2"]
 [node name="PrototypeHUD" type="CanvasLayer"]
 script=ExtResource("1")
 [node name="Margin" type="MarginContainer" parent="."]
 offset_left=20.0
 offset_top=20.0
 [node name="VBox" type="VBoxContainer" parent="Margin"]
+theme_override_constants/separation=8
+[node name="Title" type="Label" parent="Margin/VBox"]
+theme_override_colors/font_color=Color(1,0.8,0.3,1)
+theme_override_colors/font_shadow_color=Color(0,0,0,1)
+theme_override_constants/shadow_offset_x=2
+theme_override_constants/shadow_offset_y=2
+theme_override_font_sizes/font_size=32
+text="PROJECT STONE / RUNAWAY TRAIN"
+[node name="Hint" type="Label" parent="Margin/VBox"]
+theme_override_font_sizes/font_size=22
+text="EARLY BLOCKOUT  |  Collect 3 stones to transform."
 [node name="P1" type="Label" parent="Margin/VBox"]
 text="P1"
 [node name="P2" type="Label" parent="Margin/VBox"]
@@ -14,3 +26,8 @@ text="P2"
 text="P3"
 [node name="P4" type="Label" parent="Margin/VBox"]
 text="P4"
+[node name="Controls" type="Label" parent="Margin/VBox"]
+theme_override_font_sizes/font_size=20
+text="WASD move / SPACE jump / J hit / K grab / L dodge / I power"
+[node name="TouchControls" type="CanvasLayer" parent="."]
+script=ExtResource("2")

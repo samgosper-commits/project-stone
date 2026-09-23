@@ -20,6 +20,9 @@ enum State { FREE, ATTACK, HIT, DODGE, DOWN, COUNTER }
 @export var perfect_dodge_window:=0.09
 @export var counter_window:=0.42
 @export var transformation_duration:=12.0
+var respawn_position:=Vector3.ZERO
+var player_color:=Color.WHITE
+var reset_timer:=0.0
 var input_prefix:="p1"
 var health:=100.0
 var power_stones:Array[int]=[]
@@ -36,7 +39,26 @@ var counter_ready:=false
 
 func _ready():
  input_prefix="p%d"%(player_index+1);health=max_health;add_to_group("arena_players")
+ respawn_position=global_position
+ player_color=[Color("ff6b35"),Color("35c8ff"),Color("a9e34b"),Color("d698ff")][player_index%4]
+ var material:=StandardMaterial3D.new()
+ material.albedo_color=player_color
+ material.roughness=0.7
+ $MeshInstance3D.material_override=material
+ var marker:=Label3D.new()
+ marker.text="P%d"%(player_index+1)
+ marker.position=Vector3(0,1.6,0)
+ marker.billboard=BaseMaterial3D.BILLBOARD_ENABLED
+ marker.font_size=48
+ marker.outline_size=12
+ marker.modulate=player_color
+ add_child(marker)
 func _physics_process(delta):
+ if global_position.y < -8.0:
+  respawn()
+ if health<=0:
+  reset_timer+=delta
+  if reset_timer>=2.0:respawn()
  if combo_timer>0:combo_timer-=delta
  if combo_timer<=0:combo_step=0
  if transformed:
@@ -149,3 +171,18 @@ func _power():
  var t:=_target(4,115)
  if t:
   var d:Vector3=(t.global_position-global_position).normalized();t.receive_hit(24,d,13);transform_timer=maxf(0,transform_timer-2.5)
+
+func respawn()->void:
+ global_position=respawn_position
+ velocity=Vector3.ZERO
+ health=max_health
+ reset_timer=0.0
+ power_stones.clear()
+ transformed=false
+ state=State.FREE
+ state_timer=0.0
+ if held_object:
+  held_object.throw_from(Vector3.FORWARD)
+  held_object=null
+ health_changed.emit(health)
+ stones_changed.emit(0)

@@ -27,7 +27,9 @@ Open [Build Alpha in GitHub Actions](https://github.com/samgosper-commits/projec
 
 Windows and Android build independently. Each artifact includes a SHA-256 checksum and is retained for 90 days. **Run workflow** creates fresh downloads if an older artifact has expired. The separate **Godot Validate** workflow only checks the game; it does not produce downloads.
 
-The current greybox prototype uses keyboard or controller input; touch controls are not implemented. Player one: WASD to move, Space to jump, J to attack, K for action, L to evade, I for power. Controllers use the left stick and A/X/B/Y/right shoulder.
+Alpha 0.1.1 adds scene lighting, colored player markers, a status HUD, collectible stones, crates and Android touch controls for player one. This remains an early blockout with placeholder geometry, not finished game artwork. Player one on desktop: WASD to move, Space to jump, J to attack, K for action, L to evade, I for power. Controllers use the left stick and A/X/B/Y/right shoulder. Other players require controllers. Falling off the train respawns the player.
+
+Android builds currently use a temporary debug signing key. If Android rejects an update over a previous development build, uninstall that earlier alpha before installing this APK.
 
 ## Production principle
 Preserve arcade immediacy and environmental chaos. Modern systems should deepen play without replacing the simple controls or readable shared camera.
