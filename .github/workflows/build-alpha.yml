@@ -1,6 +1,7 @@
 name: Build Alpha
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [main]
   workflow_dispatch:
   push:
