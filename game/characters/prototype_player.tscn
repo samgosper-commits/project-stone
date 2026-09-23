@@ -10,6 +10,10 @@ height = 1.8
 albedo_color = Color(0.95, 0.35, 0.16, 1)
 [node name="PrototypePlayer" type="CharacterBody3D"]
 script = ExtResource("1")
+collision_layer = 2
+collision_mask = 7
+floor_snap_length = 0.3
+safe_margin = 0.025
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

@@ -1,5 +1,7 @@
 extends Node
 
+var touch_move_vector:=Vector2.ZERO
+
 const ACTIONS := ["left","right","up","down","jump","attack","action","evade","power"]
 const BUTTONS := {"jump":JOY_BUTTON_A,"attack":JOY_BUTTON_X,"action":JOY_BUTTON_B,"evade":JOY_BUTTON_Y,"power":JOY_BUTTON_RIGHT_SHOULDER}
 

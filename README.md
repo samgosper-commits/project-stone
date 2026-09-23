@@ -29,6 +29,10 @@ Windows and Android build independently. Each artifact includes a SHA-256 checks
 
 Alpha 0.1.1 adds scene lighting, colored player markers, a status HUD, collectible stones, crates and Android touch controls for player one. This remains an early blockout with placeholder geometry, not finished game artwork. Player one on desktop: WASD to move, Space to jump, J to attack, K for action, L to evade, I for power. Controllers use the left stick and A/X/B/Y/right shoulder. Other players require controllers. Falling off the train respawns the player.
 
+Alpha 0.1.2 replaces the four mobile arrows with an eight-direction thumbstick, fixes facing direction, separates stage/player/prop collision layers, adds floor snapping, and enables crate contact damage. Grab a crate with Action, then throw with Action or Attack. Throw speed, arc and knockback are provisional tuning; they have not yet been matched to reference footage.
+
+See [Character production](design/CHARACTER_PRODUCTION.md) for the first fighter art/animation plan and [Gameplay reference](design/GAMEPLAY_REFERENCE.md) for the movement comparison checklist.
+
 Android builds currently use a temporary debug signing key. If Android rejects an update over a previous development build, uninstall that earlier alpha before installing this APK.
 
 ## Production principle

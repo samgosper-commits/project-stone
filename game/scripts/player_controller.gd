@@ -22,6 +22,7 @@ enum State { FREE, ATTACK, HIT, DODGE, DOWN, COUNTER }
 @export var transformation_duration:=12.0
 var respawn_position:=Vector3.ZERO
 var player_color:=Color.WHITE
+var facing_direction:=Vector3.FORWARD
 var reset_timer:=0.0
 var input_prefix:="p1"
 var health:=100.0
@@ -54,6 +55,7 @@ func _ready():
  marker.modulate=player_color
  add_child(marker)
 func _physics_process(delta):
+ if is_on_floor() and velocity.y<0:velocity.y=0
  if global_position.y < -8.0:
   respawn()
  if health<=0:
@@ -72,6 +74,8 @@ func _physics_process(delta):
  if state in [State.HIT,State.DOWN,State.ATTACK,State.COUNTER]:
   move_and_slide();return
  var v:=Input.get_vector(input_prefix+"_left",input_prefix+"_right",input_prefix+"_up",input_prefix+"_down")
+ if player_index==0 and PrototypeInputSetup.touch_move_vector.length_squared()>v.length_squared():
+  v=PrototypeInputSetup.touch_move_vector
  var dir:=Vector3(v.x,0,v.y)
  if state==State.DODGE:move_and_slide();return
  var resonance:=1.0+0.035*power_stones.size() if not transformed else 1.0
@@ -79,12 +83,21 @@ func _physics_process(delta):
  var ctl:=1.0 if is_on_floor() else air_control
  velocity.x=move_toward(velocity.x,target.x,acceleration*ctl*delta);velocity.z=move_toward(velocity.z,target.z,acceleration*ctl*delta)
  if is_on_floor() and Input.is_action_just_pressed(input_prefix+"_jump"):velocity.y=jump_velocity
- if dir.length_squared()>0.01:rotation.y=lerp_angle(rotation.y,atan2(dir.x,dir.z),rotation_speed*delta)
+ if dir.length_squared()>0.01:
+  facing_direction=dir.normalized()
+  rotation.y=lerp_angle(rotation.y,atan2(-dir.x,-dir.z),rotation_speed*delta)
  if Input.is_action_just_pressed(input_prefix+"_attack"):_attack()
  elif Input.is_action_just_pressed(input_prefix+"_action"):_action()
  elif Input.is_action_just_pressed(input_prefix+"_evade"):_dodge(dir)
  elif Input.is_action_just_pressed(input_prefix+"_power"):_power()
  move_and_slide()
+ for i in get_slide_collision_count():
+  var collision:=get_slide_collision(i)
+  var body=collision.get_collider()
+  if body is RigidBody3D and not body.freeze:
+   var push:Vector3=-collision.get_normal()
+   push.y=0
+   body.apply_central_impulse(push*0.55)
 
 func _set_state(s:State,t:float=0):state=s;state_timer=t
 func _finish_state():
@@ -92,6 +105,8 @@ func _finish_state():
  state=State.FREE;counter_ready=false
 
 func _attack():
+ if held_object:
+  held_object.throw_from(facing_direction);held_object=null;_set_state(State.ATTACK,0.18);return
  if counter_ready:_counter();return
  combo_step=(combo_step%3)+1;combo_timer=.7
  var startup=[.08,.10,.14][combo_step-1];_set_state(State.ATTACK,startup+.16)
@@ -99,7 +114,7 @@ func _attack():
  if state!=State.ATTACK:return
  var t:=_target(2.1+(combo_step-1)*.12,75)
  if t:
-  var d:Vector3=(t.global_position-global_position).normalized();rotation.y=atan2(d.x,d.z)
+  var d:Vector3=(t.global_position-global_position).normalized();rotation.y=atan2(-d.x,-d.z);facing_direction=Vector3(d.x,0,d.z).normalized()
   t.receive_hit(attack_damage*(1+.18*(combo_step-1))*(1.6 if transformed else 1),d,5.5+combo_step*1.1)
 
 func _counter():
@@ -109,7 +124,7 @@ func _counter():
   var d:Vector3=(t.global_position-global_position).normalized();t.receive_hit(15,d,11)
 
 func _action():
- if held_object:held_object.throw_from(-global_transform.basis.z);held_object=null;return
+ if held_object:held_object.throw_from(facing_direction);held_object=null;_set_state(State.ATTACK,0.18);return
  var best:StoneInteractable;var dist:=action_radius
  for n in get_tree().get_nodes_in_group("interactables"):
   if n is StoneInteractable and n.can_interact(self):
@@ -121,7 +136,7 @@ func _action():
   var d:Vector3=(t.global_position-global_position).normalized();t.receive_hit(7,d,9.5)
 
 func _dodge(dir:Vector3):
- var d:=dir if dir.length_squared()>.01 else -global_transform.basis.z
+ var d:=dir if dir.length_squared()>.01 else facing_direction
  velocity=Vector3(d.normalized().x*dodge_speed,velocity.y,d.normalized().z*dodge_speed)
  dodge_elapsed=0;_set_state(State.DODGE,dodge_duration)
 
@@ -138,7 +153,7 @@ func receive_hit(damage:float,direction:Vector3,knockback:float):
  else:_set_state(State.HIT,.24)
 
 func _target(radius:float,arc:float)->StonePlayerController:
- var best:StonePlayerController;var bs:=INF;var forward:=-global_transform.basis.z
+ var best:StonePlayerController;var bs:=INF;var forward:=facing_direction
  for n in get_tree().get_nodes_in_group("arena_players"):
   if n==self or not n is StonePlayerController:continue
   var dv:Vector3=n.global_position-global_position;var ds:=dv.length()
