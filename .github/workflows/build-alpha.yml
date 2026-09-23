@@ -23,7 +23,7 @@ jobs:
           [gd_resource format=3]
 
           [resource]
-          export/android/java_sdk_path = "/opt/java/openjdk"
+          export/android/java_sdk_path = "/usr/local/openjdk-17"
           export/android/android_sdk_path = "/opt/android-sdk"
           export/android/debug_keystore = "/github/home/debug.keystore"
           export/android/debug_keystore_user = "androiddebugkey"
