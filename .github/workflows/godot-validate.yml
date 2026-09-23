@@ -1,0 +1,17 @@
+name: Godot Validate
+on:
+  push:
+    paths: ["game/**", ".github/workflows/godot-validate.yml"]
+  pull_request:
+    paths: ["game/**"]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import project
+        run: godot --headless --path game --editor --quit
+      - name: Parse/run smoke test
+        run: godot --headless --path game --quit-after 5
