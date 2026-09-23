@@ -15,7 +15,7 @@ if grep -E 'SCRIPT ERROR:|Parse Error:|ERROR:.*export.*failed|Could not load edi
 fi
 if [[ "$platform" == Android ]]; then
   unzip -t "$output"
-  apksigner="$(find /opt/android-sdk/build-tools -name apksigner -type f | sort -V | tail -1)"
+  apksigner="$(find "${ANDROID_HOME:-/usr/lib/android-sdk}/build-tools" -name apksigner -type f | sort -V | tail -1)"
   test -n "$apksigner"
   "$apksigner" verify --verbose "$output"
 fi
