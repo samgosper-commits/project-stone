@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(24, 0.5, 12)
+
+[node name="RunawayTrain" type="Node3D"]
+
+[node name="GreyboxFloor" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_floor")
+
+[node name="PrototypeCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.766044, 0.642788, 0, -0.642788, 0.766044, 0, 14, 17)
+current = true
