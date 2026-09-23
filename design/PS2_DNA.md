@@ -10,7 +10,7 @@ Power Stone 2 uses an unusually small input vocabulary for a 3D arena fighter: 3
 **Project Stone:** preserve this economy. Do not add a conventional light/heavy fighting-game layout by default. Prototype a contextual Attack + Jump + Action core first; any additional input must justify itself in playtests.
 
 ### No conventional block
-The original does not use a normal hold-to-block system. Defensive play comes from movement and a timed dodge.
+The original does not use a normal hold-to-block system. Defensive play comes from movement and a timed dodge. The original manual describes directional input timed to an incoming attack; our dedicated dodge button is a prototype choice, not the original mapping.
 
 **Project Stone:** prototype movement/evasion as primary defence. Avoid creating stationary defensive play.
 
@@ -104,3 +104,8 @@ A new mechanic passes the DNA test only if:
 3. it does not reduce movement freedom;
 4. it remains readable with four players;
 5. it produces interesting decisions rather than additional execution burden.
+
+
+## Reference correction, 2026-09-23
+
+See [Gameplay reference](GAMEPLAY_REFERENCE.md#reference-review--2026-09-23) for source-backed throw, catch, dodge and Falcon movement distinctions and the explicit video playback limitation. Do not treat alpha 0.1.2 as a measured reconstruction of the original. Prioritise this correction record over earlier shorthand about input fidelity.
