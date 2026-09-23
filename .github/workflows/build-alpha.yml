@@ -27,7 +27,15 @@ jobs:
           SETTINGS="$(find /github/home -type f -name 'editor_settings-4.tres' -o -name 'editor_settings-4.4.tres' | head -1)"
           echo "Godot settings: $SETTINGS"
           test -n "$SETTINGS"
-          printf '\n[resource]\nexport/android/java_sdk_path = "%s"\nexport/android/android_sdk_path = "/opt/android-sdk"\nexport/android/debug_keystore = "/github/home/debug.keystore"\nexport/android/debug_keystore_user = "androiddebugkey"\nexport/android/debug_keystore_pass = "android"\n' "$JAVA_HOME_REAL" > "$SETTINGS"
+          cat > "$SETTINGS" <<EOF
+[editor_settings]
+
+export/android/java_sdk_path = "$JAVA_HOME_REAL"
+export/android/android_sdk_path = "/opt/android-sdk"
+export/android/debug_keystore = "/github/home/debug.keystore"
+export/android/debug_keystore_user = "androiddebugkey"
+export/android/debug_keystore_pass = "android"
+EOF
           cat "$SETTINGS"
       - name: Import and validate
         run: godot --headless --path game --editor --quit
