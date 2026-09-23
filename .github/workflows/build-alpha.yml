@@ -1,54 +1,50 @@
 name: Build Alpha
+
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [main]
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ["game/**", ".github/workflows/build-alpha.yml"]
+    paths: ["game/**", "ci/**", ".github/workflows/**"]
+  pull_request:
+    branches: [main]
+    paths: ["game/**", "ci/**", ".github/workflows/**"]
+
+permissions:
+  contents: read
+
 jobs:
-  builds:
+  export:
+    name: Build ${{ matrix.platform }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     container:
       image: barichello/godot-ci:4.4
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [Windows, Android]
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
-      - name: Install export templates
-        run: |
-          mkdir -p /github/home/.local/share/godot/export_templates/4.4.stable
-          cp -r /root/.local/share/godot/export_templates/4.4.stable/* /github/home/.local/share/godot/export_templates/4.4.stable/
-      - name: Configure Android
-        run: |
-          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore /github/home/debug.keystore -storepass android -dname "CN=Android Debug,O=Project Stone,C=AU" -validity 10000
-          JAVA_BIN="$(readlink -f "$(command -v java)")"
-          JAVA_HOME_REAL="$(dirname "$(dirname "$JAVA_BIN")")"
-          echo "Resolved Java: $JAVA_HOME_REAL"
-          godot --headless --editor --path game --quit
-          SETTINGS="$(find /github/home -type f -name 'editor_settings-4.tres' -o -name 'editor_settings-4.4.tres' | head -1)"
-          echo "Godot settings: $SETTINGS"
-          test -n "$SETTINGS"
-          cat > "$SETTINGS" <<EOF
-[editor_settings]
-
-export/android/java_sdk_path = "$JAVA_HOME_REAL"
-export/android/android_sdk_path = "/opt/android-sdk"
-export/android/debug_keystore = "/github/home/debug.keystore"
-export/android/debug_keystore_user = "androiddebugkey"
-export/android/debug_keystore_pass = "android"
-EOF
-          cat "$SETTINGS"
-      - name: Import and validate
-        run: godot --headless --path game --editor --quit
-      - name: Build Windows alpha
-        run: mkdir -p build/windows && godot --headless --path game --export-debug "Windows Desktop" ../build/windows/ProjectStoneAlpha.exe
-      - name: Build Android alpha
-        run: mkdir -p build/android && godot --headless --path game --export-debug "Android" ../build/android/ProjectStoneAlpha.apk
-      - uses: actions/upload-artifact@v4
+      - name: Configure Godot and export templates
+        run: bash ci/prepare-godot.sh "${{ matrix.platform }}"
+      - name: Import and smoke test
+        run: bash ci/validate-game.sh
+      - name: Export and verify game file
+        run: bash ci/export-alpha.sh "${{ matrix.platform }}"
+      - name: Upload playable build
+        uses: actions/upload-artifact@v4
         with:
-          name: Project-Stone-Alpha-Windows
-          path: build/windows/
-      - uses: actions/upload-artifact@v4
+          name: Project-Stone-Alpha-${{ matrix.platform }}
+          path: build/${{ matrix.platform }}/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Upload diagnostic logs
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          name: Project-Stone-Alpha-Android
-          path: build/android/ProjectStoneAlpha.apk
+          name: Build-Logs-${{ matrix.platform }}
+          path: build/logs/
+          if-no-files-found: ignore
