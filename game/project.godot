@@ -19,3 +19,5 @@ textures/default_filters/use_nearest_mipmap_filter=false
 ; alpha_build_trigger=1
 
 ; android_final_ci=1
+
+; trigger_android_alpha_workflow=2
