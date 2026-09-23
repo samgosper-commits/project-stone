@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths: ["game/**", ".github/workflows/build-alpha.yml"]
 jobs:
-  windows:
+  builds:
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.4
@@ -19,7 +19,13 @@ jobs:
         run: godot --headless --path game --editor --quit
       - name: Build Windows alpha
         run: mkdir -p build/windows && godot --headless --path game --export-debug "Windows Desktop" ../build/windows/ProjectStoneAlpha.exe
+      - name: Build Android alpha
+        run: mkdir -p build/android && godot --headless --path game --export-debug "Android" ../build/android/ProjectStoneAlpha.apk
       - uses: actions/upload-artifact@v4
         with:
           name: Project-Stone-Alpha-Windows
           path: build/windows/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Project-Stone-Alpha-Android
+          path: build/android/ProjectStoneAlpha.apk
