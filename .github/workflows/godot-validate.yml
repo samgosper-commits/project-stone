@@ -11,7 +11,35 @@ jobs:
       image: barichello/godot-ci:4.4
     steps:
       - uses: actions/checkout@v4
+      - name: Install export templates
+        run: |
+          mkdir -p /github/home/.local/share/godot/export_templates/4.4.stable
+          cp -r /root/.local/share/godot/export_templates/4.4.stable/* /github/home/.local/share/godot/export_templates/4.4.stable/
       - name: Import project
         run: godot --headless --path game --editor --quit
       - name: Parse/run smoke test
         run: godot --headless --path game --quit-after 5
+      - name: Configure Android
+        run: |
+          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore /github/home/debug.keystore -storepass android -dname "CN=Android Debug,O=Project Stone,C=AU" -validity 10000
+          JAVA_BIN="$(readlink -f "$(command -v java)")"
+          JAVA_HOME_REAL="$(dirname "$(dirname "$JAVA_BIN")")"
+          mkdir -p /github/home/.config/godot
+          cat > /github/home/.config/godot/editor_settings-4.4.tres <<EOF
+[editor_settings]
+
+export/android/java_sdk_path = "$JAVA_HOME_REAL"
+export/android/android_sdk_path = "/opt/android-sdk"
+export/android/debug_keystore = "/github/home/debug.keystore"
+export/android/debug_keystore_user = "androiddebugkey"
+export/android/debug_keystore_pass = "android"
+EOF
+      - name: Build Android APK
+        run: |
+          mkdir -p build/android
+          godot --headless --path game --export-debug "Android" ../build/android/ProjectStoneAlpha.apk
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Project-Stone-Alpha-Android
+          path: build/android/ProjectStoneAlpha.apk
