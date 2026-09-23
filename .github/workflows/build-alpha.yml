@@ -11,25 +11,28 @@ jobs:
       image: barichello/godot-ci:4.4
     steps:
       - uses: actions/checkout@v4
-      - name: Install Godot export templates
+      - name: Install export templates
         run: |
           mkdir -p /github/home/.local/share/godot/export_templates/4.4.stable
           cp -r /root/.local/share/godot/export_templates/4.4.stable/* /github/home/.local/share/godot/export_templates/4.4.stable/
-      - name: Configure Android toolchain
+      - name: Configure Android
         run: |
-          mkdir -p /github/home/.config/godot
           keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore /github/home/debug.keystore -storepass android -dname "CN=Android Debug,O=Project Stone,C=AU" -validity 10000
-          godot --headless --editor --path game --quit --editor-settings /github/home/.config/godot/editor_settings-4.tres || true
-          cat > /github/home/.config/godot/editor_settings-4.tres <<'EOF'
+          mkdir -p /github/home/.config/godot
+          cat > /github/home/.config/godot/editor_settings-4.tres <<EOF
           [gd_resource format=3]
 
           [resource]
-          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/java_sdk_path = "/opt/java/openjdk"
           export/android/android_sdk_path = "/opt/android-sdk"
           export/android/debug_keystore = "/github/home/debug.keystore"
           export/android/debug_keystore_user = "androiddebugkey"
           export/android/debug_keystore_pass = "android"
           EOF
+          echo "JAVA_HOME=$JAVA_HOME"
+          which java
+          which keytool
+          find /opt -maxdepth 3 -type d -name "android-sdk*" -o -name "sdk" | head -20
       - name: Import and validate
         run: godot --headless --path game --editor --quit
       - name: Build Windows alpha
