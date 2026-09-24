@@ -1,6 +1,6 @@
 # Falcon — concept direction 01
 
-Status: proposed visual direction, not user-approved final design. Concept art is not a finished or rigged 3D asset. No game build changes in this design pass.
+Status: selected by Sam on 2026-09-24 ("Done. Lets use that"). Concept 01 is the visual baseline for normal Falcon and his Power Change form. Concept art is not a finished or rigged 3D asset. No game build changes in this design pass.
 
 ## Design intent
 
@@ -10,7 +10,7 @@ A recognisable modern Edward Falcon for Project Stone: an energetic pilot-advent
 
 Blond hair, pilot goggles, red flight jacket and trousers, white cravat, brown gloves and boots. Preserve recognisable costume colour blocking and broad hands/feet. Reference description: https://powerstone.fandom.com/wiki/Edward_Falcon . Powered-form artwork visually inspected at https://www.creativeuncut.com/gallery-20/ps-red-whirlwind.html : red rounded armour, prominent helmet fin, dark forehead panels, exposed metallic lower face, oversized silver knuckles and cuffs, rocket hardware.
 
-## Proposed update
+## Selected design
 
 - **Face:** expressive eyes and brows, swept blond hair, self-assured smile. Keep facial planes stylised and readable.
 - **Clothing:** rich red flight fabric with reinforced seam panels, cream collar lining, a compact white cravat and restrained brass fastenings. Give the jacket room for overhead crate lifts and a boxing guard.
@@ -31,4 +31,9 @@ One landscape presentation sheet: large normal-form three-quarter full body, sma
 
 ## Next deliverable
 
-Resolve silhouette and costume choices from this sheet, then make consistent orthographic front/side/back model references. Build a rough 3D version and inspect it in the actual arena camera before final topology, textures, rigging and animation. User feedback on this proposal must be recorded before calling it the selected design.
+Create matching front/side/back model references from the selected sheet, preserving its face, proportions, costume, colour blocks and powered silhouette. Build a rough 3D version and inspect it in the actual arena camera before final topology, textures, rigging and animation. The concept direction is selected. New turnarounds are derived working references; reconcile any generated view inconsistencies during modelling rather than treating them as silent redesigns.
+
+
+## Selection record
+
+Selected artwork: Falcon Concept 01, generated in this conversation, source filename `exec-96b627f6-e854-4f00-b2e0-f2bdadb1934d.png`. It includes the normal three-quarter view, normal back view, face detail and powered form. Keep this image as the identity reference. The playable build still uses capsule stand-ins; this selection does not mean a 3D character has been integrated.

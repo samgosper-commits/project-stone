@@ -33,3 +33,8 @@ Warm timber/painted metal carriages against bright expansive landscapes. Movemen
 
 ### Sinking Pirate Ship
 Warm timber and fire against cool ocean/storm values. Damage and flooding progressively alter navigation while maintaining player readability.
+
+
+## Selected first fighter — 2026-09-24
+
+Sam selected [Falcon Concept 01](FALCON_CONCEPT_V1.md) as the first fighter design, including its normal and powered forms. Preserve that sheet's identity when deriving model references. Proceed with turnarounds, then a 3D blockout at gameplay camera distance, then rigging and core animation. The selected image is a concept reference, not a playable asset.
